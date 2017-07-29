@@ -1,0 +1,32 @@
+{
+  "dependencies": {
+    "amqplib": "^0.5.1",
+    "chairo": "^3.0.0",
+    "dns-discovery": "^5.6.0",
+    "dotenv": "^4.0.0",
+    "fs": "0.0.1-security",
+    "hapi": "^16.1.1",
+    "jsonwebtoken": "^7.3.0",
+    "lodash": "^4.17.4",
+    "mdns": "^2.3.3",
+    "minimist": "^1.2.0",
+    "mongoose": "^4.9.4",
+    "moving-average": "^0.1.1",
+    "node-rest-client": "^3.1.0",
+    "os-utils": "0.0.14",
+    "path": "^0.12.7",
+    "querystring": "^0.2.0",
+    "rbush": "^2.0.1",
+    "rbush-knn": "^2.0.0",
+    "seneca": "^3.3.0",
+    "simple-average": "^2.0.0",
+    "tesseract.js": "^1.0.10",
+    "uuid": "^3.0.1",
+    "winston": "^2.3.1",
+    "ws": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.13",
+    "ts-node": "^3.0.2"
+  }
+}

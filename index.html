@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" name="viewport" content="width=device-width" />
+    <title>
+        Device Node Status
+    </title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Socket.io import the module I have in the project -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <!-- Javascript Highcharts import the file directly from your server -->
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+    <script src="https://highcharts.github.io/export-csv/export-csv.js"></script>
+</head>
+
+<body>
+    <!--  'll have the div where the graph. I tell it that the width of the
+         screen is 100% and the height is 400px -->
+    <div id="chart1" class="fixed" style="height:500px;width:600px"></div>
+    <!--div class="container" style="display:flex">
+        <div id="chart1" class="fixed" style="width:50%; height:500px;"></div>
+        <div id="chart2" class="flexible" style="flex-grow:1; height:200px;"></div>
+    </div-->
+
+    <div data-role="main" class="ui-content">
+        <form>
+            <label for="points">Job Ingress Rate:</label>
+            <input type="range" name="points" id="points" value="600" min="50" max="5000">
+            <input type="number" id="outputValue">
+            <input type="button" data-inline="true" id="submitButton" value="Submit">
+            <input type="button" id="downloadAll" value="Download All">
+        </form>
+    </div>
+    <!-- Javascript Begins -->
+    <script>
+        // I create a WebSocket
+        var socket = io.connect('http://10.0.10.250:8001');
+        document.getElementById("points").addEventListener("change", function () {
+            document.getElementById("outputValue").value = document.getElementById("points").value;
+        }, false);
+        document.getElementById("submitButton").addEventListener("click", function () {
+            socket.send(document.getElementById("outputValue").value);
+        }, false);
+        document.getElementById("downloadAll").addEventListener("click", function () {
+            chart1.exportChartLocal();
+            //chart2.exportChartLocal();
+            chart1.downloadCSV();
+            //chart2.downloadCSV();
+        }, false);
+
+        // I create a new object 'Chart1'
+        var chart1 = new Highcharts.Chart({
+            credits: {
+                enabled: false
+            },
+            exporting: {
+                chartOptions: {
+                    title: {
+                        text: ''
+                    }
+                },
+                filename: "chart_deviceNode_response_latency",
+                sourceHeight: 500,
+                scale: 1,//(default = 2)
+                sourceWidth: 1000,
+                type: "image/png"
+            },
+            chart: {
+                renderTo: 'chart1',
+                defaultSeriesType: 'spline',
+                events: {
+                    load: function () {
+                        // Each time you receive a value from the socket, I put it on the graph
+                        socket.on('rspAvg', function (time, data) {
+                            chart1.series[0].addPoint([time, data.avg5sec]);
+                            chart1.series[1].addPoint([time, data.avg]);
+                            chart1.series[2].addPoint([time, data.jobDelay]);
+                        });
+                    }
+                }
+            },
+            rangeSelector: {
+                selected: 100
+            },
+            title: {
+                text: 'Task Response Latency'
+            },
+            xAxis: {
+                //type: 'datetime',
+                tickPixelInterval: 150,
+                //maxZoom: 20 * 1000
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: 'Latency in ms',
+                    margin: 20
+                }
+            },
+            series: [{
+                name: 'Latency (MM 5sec)',
+                data: []
+            },
+            {
+                name: 'Latency Average',
+                data: []
+            },
+            {
+                name: 'Job Ingress Rate',
+                data: []
+            }]
+        });
+        var chart2 = new Highcharts.Chart({
+            credits: {
+                enabled: false
+            },
+            exporting: {
+                chartOptions: {
+                    title: {
+                        text: ''
+                    }
+                },
+                filename: "chart_deviceNode_delaybwJobs",
+                sourceHeight: 500,
+                scale: 1,//(default = 2)
+                sourceWidth: 1000,
+                type: "image/png"
+            },
+            chart: {
+                renderTo: 'chart2',
+                defaultSeriesType: 'spline',
+                events: {
+                    load: function () {
+                        // Each time you receive a value from the socket, I put it on the graph
+                        socket.on('jobDelay', function (time, jobDelay) {
+                            chart2.series[0].addPoint([time, jobDelay]);
+                            console.log(jobDelay);
+                        });
+                    }
+                }
+            },
+            rangeSelector: {
+                selected: 100
+            },
+            title: {
+                text: 'Job Ingress Rate'
+            },
+            xAxis: {
+                //type: 'datetime',
+                tickPixelInterval: 150,
+                //maxZoom: 20 * 1000
+            },
+            yAxis: {
+                minPadding: 0.2,
+                maxPadding: 0.2,
+                title: {
+                    text: 'Delay in ms',
+                    margin: 20
+                }
+            },
+            series: [{
+                name: 'Job delay',
+                data: []
+            }]
+        });
+    </script>
+</body>
+
+</html>
