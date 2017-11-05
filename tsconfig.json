@@ -14,7 +14,8 @@
         "**/*.spec.ts"
     ],
     "include": [
-        "./src/**/*"
+        "./src/**/*",
+        "../cluster-common/common/**/*"
     ],
     "typeAcquisition": {
         "include": [

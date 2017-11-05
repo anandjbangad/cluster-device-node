@@ -1,6 +1,6 @@
 import path = require('path');
 import fs = require("fs");
-import * as itf from "../../common/interfaces.d"
+import * as itf from "../../cluster-common/common/interfaces"
 import MA = require('moving-average');
 import SA = require('simple-average');
 import winston = require("winston")

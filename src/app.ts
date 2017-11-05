@@ -7,7 +7,7 @@ import Tesseract = require('tesseract.js')
 
 import { Client } from 'node-rest-client';
 var client = new Client();
-import * as itf from "../../common/interfaces.d"
+import * as itf from "../../cluster-common/common/interfaces"
 import jwt = require('jsonwebtoken');
 import amqp = require('amqplib');
 import { startCharting } from "./charts/server"
@@ -56,8 +56,8 @@ import fs = require("fs");
 //console.log("token received is ", data.token);
 //imported from core module
 //import WebSocket = require('ws');
-//amqp.connect('amqp://' + process.env.EDGE_HOST)
-amqp.connect('amqp://' + "10.0.10.240")
+amqp.connect('amqp://' + process.env.EDGE_HOST)
+//amqp.connect('amqp://' + "10.0.10.240")
     .then((conn) => {
         return conn.createChannel();
     })
