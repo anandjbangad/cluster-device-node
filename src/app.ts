@@ -2,7 +2,7 @@ import { config } from "dotenv";
 config({ path: "./.env" });
 import path = require('path');
 import { task1, task2, stressTask } from "./task";
-
+import Config from "./config";
 import Tesseract = require('tesseract.js')
 
 import { Client } from 'node-rest-client';
@@ -17,7 +17,7 @@ let argv = require('minimist')(process.argv.slice(2));
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
     timestamp: true,
-    level: process.env.LOGGING_LVL, //{ error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
+    level: Config.LOGGING_LVL, //{ error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
     colorize: true
 });
 
@@ -40,6 +40,8 @@ var args = jwt.sign({
 }, 'secret-key');
 import WebSocket = require('ws');
 import fs = require("fs");
+
+
 // client.post("http://localhost:9081/devices", args, function (data, response) {
 //     // parsed response body as js object
 //     //console.log(data);
@@ -56,7 +58,7 @@ import fs = require("fs");
 //console.log("token received is ", data.token);
 //imported from core module
 //import WebSocket = require('ws');
-amqp.connect('amqp://' + process.env.EDGE_HOST)
+amqp.connect('amqp://' + Config.EDGE_HOST)
 //amqp.connect('amqp://' + "10.0.10.240")
     .then((conn) => {
         return conn.createChannel();
@@ -107,7 +109,7 @@ amqp.connect('amqp://' + process.env.EDGE_HOST)
     .catch((err) => {
         winston.error(err);
     })
-// var ws = new WebSocket('ws://' + process.env.EDGE_HOST + ':' + process.env.EDGE_PORT + '/client', {
+// var ws = new WebSocket('ws://' + Config.EDGE_HOST + ':' + Config.EDGE_PORT + '/client', {
 //     sid: 'https://websocket.org'
 // });
 // this.ws = ws;
@@ -189,7 +191,7 @@ amqp.connect('amqp://' + process.env.EDGE_HOST)
 
 //});
 let amqpLatency: any = {}
-amqp.connect('amqp://' + process.env.PYTHON_HOST)
+amqp.connect('amqp://' + Config.PYTHON_HOST)
     .then((conn) => {
         return conn.createChannel();
     })

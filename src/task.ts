@@ -48,6 +48,7 @@ export function task2(globalCtx) {
             sentTime: Date.now(),
             ttl: 3
         }
+        //Cheeck here if offload to queue
         globalCtx.amqp.ch.sendToQueue('d_task1_req', Buffer.from(JSON.stringify(edge_req)));
         globalCtx.req_count++;
 
@@ -129,7 +130,7 @@ export function task1WS(ws) {
                 ws.send(JSON.stringify(json_message));
             });
         }
-    }, delay_bw_images);
+    }, delay_bw_task);
     console.log("Connection Established");
 }
 
